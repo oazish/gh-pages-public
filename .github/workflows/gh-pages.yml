@@ -13,6 +13,7 @@ jobs:
           cd "$(mktemp -d)"
           tar -C "${GITHUB_WORKSPACE}/src" -cf artifact.tar .
           echo "path=${PWD}/artifact.tar" >>"$GITHUB_OUTPUT"
+      - run: jwt --help
       - uses: actions/upload-artifact@v4
         with:
           name: github-pages
