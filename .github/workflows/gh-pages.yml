@@ -10,11 +10,13 @@ jobs:
       - uses: actions/checkout@v4
       - id: build
         run: |
-          build_dir=$(mktemp -d)
-          rsync -Pr src "$build_dir"
-          echo "path=${build_dir}" >>"$GITHUB_OUTPUT"
-      - uses: actions/upload-pages-artifact@v3
+          cd "$(mktemp -d)"
+          rsync -Pr "${GITHUB_WORKSPACE}/src" .
+          tar -cf github-pages .
+          echo "path=${PWD}/github-pages" >>"$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
         with:
+          name: github-pages
           path: ${{ steps.build.outputs.path }}
       - env:
           GH_TOKEN: ${{ github.token }}
