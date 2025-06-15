@@ -1,0 +1,19 @@
+on:
+  push:
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    steps:
+      - uses: actions/checkout@v4
+      - id: build
+        run: |
+          build_dir=$(mktemp -d)
+          rsync -Pr src "$build_dir"
+          echo "path=${build_dir}" >>"$GITHUB_OUTPUT"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.build.outputs.path }}
+      - uses: actions/deploy-pages@v4
